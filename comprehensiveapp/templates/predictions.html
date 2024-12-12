@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- This file contains the HTML code for the predictions page of the web application. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -54,13 +53,13 @@
       <!-- Prediction Section -->
       <div class="row mt-4">
         <div class="col-md-12">
-          <h2 style="color: #f0f0f0;">Water Ground Level Prediction</h2>
+          <h2 style="color: #f0f0f0;">Ground Water Level Prediction</h2>
           <div id="inputFields" class="mb-3">
             <input type="number" class="form-control mb-2" placeholder="Depth to Groundwater (m)" />
             <input type="number" class="form-control mb-2" placeholder="Temperature (°C)" />
             <input type="number" class="form-control mb-2" placeholder="Drainage Volume (m³)" />
             <input type="number" class="form-control mb-2" placeholder="River Hydrometry (m)" />
-            <input type="number" class="form-control mb-2" placeholder="Rainfall (mm)" />
+            <input type="number" class="form-control mb-2" placeholder="Temperature (mm)" />
           </div>
           <button id="predictWater" class="btn btn-success mt-3">
             Predict Ground Water Levels
@@ -128,11 +127,29 @@
             data: JSON.stringify({ data }),
             success: function (response) {
               const predictions = response.predictions;
-              $("#waterPredictionResults").html(`
-                <div class="alert alert-info">
-                  <strong>Predicted Values:</strong> ${predictions.join(", ")}
-                </div>
-              `);
+              let tableHtml = `
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>Predicted Water Levels (m)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+              `;
+              predictions.forEach((value, index) => {
+                tableHtml += `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${value.toFixed(2)}</td> <!-- Rounding to 2 decimal places -->
+                  </tr>
+                `;
+              });
+              tableHtml += `
+                  </tbody>
+                </table>
+              `;
+              $("#waterPredictionResults").html(tableHtml);
             },
             error: function () {
               $("#waterPredictionResults").html(
@@ -207,5 +224,3 @@
     </script>
   </body>
 </html>
-
-<!-- End of waterapp/templates/predictions.html -->
