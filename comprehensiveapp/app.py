@@ -64,8 +64,8 @@ def register():
     return render_template('register.html')
 
 # Load models and scaler
-model = load_model('../ml-model-container/ML-models/wmodel.keras', custom_objects={'mse': MeanSquaredError()})
-scaler = joblib.load('../ml-model-container/ML-models/scaler.pkl')
+model = load_model('./wmodel.keras', custom_objects={'mse': MeanSquaredError()})
+scaler = joblib.load('./scaler.pkl')
 predicted_values = []
 
 # Weather API Key
