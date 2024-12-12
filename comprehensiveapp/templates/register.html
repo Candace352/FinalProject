@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Water Availability Registration</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('/static', filename='register.css') }}" /> -->
+    <link rel="stylesheet" href="/waterapp/static/register.css" />
+</head>
+
+<body>
+    <h1>Water Availability: Registration Form</h1>
+    <div class="registration-form">
+        <form action="{{ url_for('register') }}" method="POST">
+            <label for="firstName">First Name:</label><br />
+            <input type="text" id="firstName" name="firstName" /><br /><br />
+
+            <label for="lastName">Last Name:</label><br />
+            <input type="text" id="lastName" name="lastName" /><br /><br />
+
+            <label for="email">Email Address:</label><br />
+            <input type="email" id="email" name="email" /><br /><br />
+
+            <label for="phoneNumber">Phone Number:</label><br />
+            <input type="tel" id="phoneNumber" name="phoneNumber" /><br /><br />
+
+            <label for="username">Username:</label><br />
+            <input type="text" id="username" name="username" /><br /><br />
+
+            <label for="password">Password:</label><br />
+            <input type="password" id="password" name="password" /><br /><br />
+
+            <button type="submit">Register</button>
+            <p style="text-align: center; margin-top: 5px">
+                Already a member? <a href="{{ url_for('login') }}">Go to Login</a>
+            </p>
+        </form>
+    </div>
+</body>
+
+</html>

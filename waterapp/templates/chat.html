@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot AI Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #4f636e; /* Lighter dark gray background */
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #607d8b; /* Lighter gray for the chat container */
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-title {
+            background-color: #10548f; /* Lighter blue */
+            color: #ffffff; /* White text for contrast */
+            padding: 30px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            width: 100%; /* Full width */
+            max-width: 540px; /* Max width for title */
+            margin: 0 auto; /* Center the title */
+        }
+
+        .chat-box {
+            height: 450px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #78909c; /* Lighter teal for the chat box */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between messages */
+        }
+
+        .chat-message {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .chat-message.bot {
+            background-color: #b3e5fc; /* Lighter blue for bot messages */
+            align-self: flex-start; /* Align bot messages to the left */
+            border: 1px solid #42a5f5;
+            color: #0d47a1; /* Dark blue */
+        }
+
+        .chat-message.user {
+            background-color: #c8e6c9; /* Lighter green for user messages */
+            align-self: flex-end; /* Align user messages to the right */
+            border: 1px solid #81c784;
+            color: #1b5e20; /* Dark green */
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #607d8b; /* Lighter gray */
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc; /* Light gray for input border */
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 1rem;
+            color: #ffffff; /* White text for input */
+            background-color: #90a4ae; /* Lighter gray for input background */
+        }
+
+        .input-container button {
+            padding: 12px 20px;
+            border: none;
+            background-color: #1e88e5; /* Lighter button */
+            color: #ffffff; /* White for button text */
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .input-container button:hover {
+            background-color: #1565c0; /* Darker hover color */
+            transform: scale(1.05);
+        }
+
+        .input-container button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-title">Chatbot Interface</div>
+    <div class="chat-box" id="chat-box">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" />
+        <button id="send-btn">Send</button>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    function appendMessage(message, sender) {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("chat-message", sender);
+        messageDiv.textContent = message;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the latest message
+    }
+
+    sendBtn.addEventListener("click", async () => {
+        const inputText = userInput.value.trim();
+        if (!inputText) return;
+
+        // Append user message
+        appendMessage(inputText, "user");
+        userInput.value = "";  // Clear input field
+
+        try {
+            const response = await fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ input_text: inputText }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                appendMessage("Error: " + data.error, "bot");
+            } else {
+                const botResponse = data.response;
+                appendMessage(botResponse, "bot");
+            }
+        } catch (error) {
+            appendMessage("Error: " + error.message, "bot");
+        }
+    });
+
+    // Enable Enter key to send message
+    userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            sendBtn.click();
+        }
+    });
+</script>
+
+</body>
+</html>
