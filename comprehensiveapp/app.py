@@ -47,7 +47,7 @@ def login():
         user = Users.query.filter_by(username=request.form.get("username")).first()
         if user and user.password == request.form.get("password"):
             login_user(user)
-            return redirect(url_for('home'))
+            return render_template('weather.html'))
         else:
             return "Invalid credentials!"
     return render_template('login.html')
